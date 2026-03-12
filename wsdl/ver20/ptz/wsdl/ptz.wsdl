@@ -681,6 +681,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="ProfileToken" type="tt:ReferenceToken"/>
+						<xs:element name="PresetTourToken" type="tt:ReferenceToken" minOccurs="0"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>

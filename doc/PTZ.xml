@@ -412,6 +412,9 @@ Add GeoMove</revremark>
           <listitem>
             <para>MaximumNumberOfPresetTours – Indicates number of preset tours that can be created. Required preset tour operations shall be available for this PTZ node if one or more preset tours are supported.</para>
           </listitem>
+          <listitem>
+            <para>MaximumNumberOfRecordedTours – Indicates number of recorded tours that can be created. Required recorded tour operations shall be available for this PTZ node if one or more recorded tours are supported.</para>
+          </listitem>
         </itemizedlist>
       </section>
       <section>
@@ -1727,7 +1730,7 @@ Add GeoMove</revremark>
     </section>
     <section>
       <title>Tour Operations</title>
-      <para>Tours are a feature for PTZ-capable devices that automate PTZ movement. A device
+3      <para>Tours are a feature for PTZ-capable devices that automate PTZ movement. A device
         can support two types of tours:</para>
       <itemizedlist>
         <listitem>
@@ -1743,19 +1746,18 @@ Add GeoMove</revremark>
             recorded PTZ movements. A recorded tour is created via the StartTourRecording
             operation: the device captures all PTZ movements until StopTourRecording is issued.
             The resulting tour is marked with isRecorded set to true and may have an empty list of
-            tour spots. Direction and RandomPresetOrder do not apply to recorded tours. Support
-            for recorded tours is signalled via the RecordedTourSupported attribute of
-            PTZPresetTourSupported.</para>
+            tour spots. Direction and RandomPresetOrder do not apply to recorded tours.</para>
         </listitem>
       </itemizedlist>
       <para>This section describes operations that manage tours. These operations shall be
         implemented when a PTZ node in the PTZ service indicates support of preset tours with
-        MaximumNumberOfPresetTours&gt;0 capability value. All operations require a profile token
+        MaximumNumberOfPresetTours&gt;0 capability value or recorded tours with
+        MaximumNumberOfRecordedTours&gt;0 capability value. All operations require a profile token
         referencing a Media Profile including a PTZConfiguration. All tour configurations shall
         always be persistent.</para>
       <section>
         <title>GetPresetTours</title>
-        <para>A device supporting Preset Tour feature shall return all available preset tours through GetPresetTours.</para>
+        <para>A device supporting Tour feature shall return all available preset and recorded tours through GetPresetTours.</para>
         <variablelist role="op">
           <varlistentry>
             <term>request</term>
@@ -1947,7 +1949,8 @@ Add GeoMove</revremark>
       </section>
       <section>
         <title>OperatePresetTour</title>
-        <para>A device supporting preset tours shall allow starting, stopping, or pausing a preset tour through OperatePresetTour.</para>
+        <para>A device supporting tours shall allow starting, stopping, or pausing a preset
+          tour as signaled by the PTZ node configuration.</para>
         <para>Preset tour can be operated with the PresetTourOperation parameter of OperatePresetTour command. </para>
         <itemizedlist>
           <listitem>
@@ -2004,7 +2007,7 @@ Add GeoMove</revremark>
       </section>
       <section>
         <title>RemovePresetTour</title>
-        <para>A device supporting preset tours shall support removing preset tours through RemoevPresetTour.</para>
+        <para>A device supporting tours shall support removing preset and recorded tours through RemovePresetTour.</para>
         <variablelist role="op">
           <varlistentry>
             <term>request</term>
@@ -2045,14 +2048,16 @@ Add GeoMove</revremark>
         <para>A device supporting recorded tours shall allow a client to start recording PTZ
           movements into a new tour through StartTourRecording. The device creates a new tour
           and begins capturing all PTZ movements until a StopTourRecording command is issued.</para>
-        <para>Support for recorded tours is signalled via the RecordedTourSupported attribute of
-          PTZPresetTourSupported.</para>
+        <para>Support for recorded tours is signalled via the MaxRecordedTours field of
+          PTZ node.</para>
         <variablelist role="op">
           <varlistentry>
             <term>request</term>
             <listitem>
               <para role="param">ProfileToken [tt:ReferenceToken]</para>
               <para role="text">Reference to an existing media profile.</para>
+              <para role="param">PresetTourToken - optional[tt:ReferenceToken]</para>
+              <para role="text">Optional reference to an existing recorded tour.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
