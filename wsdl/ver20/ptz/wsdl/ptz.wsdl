@@ -677,6 +677,35 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 				</xs:complexType>
 			</xs:element>
 			<!--===============================-->
+			<xs:element name="StartTourRecording">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ProfileToken" type="tt:ReferenceToken"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="StartTourRecordingResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="PresetTourToken" type="tt:ReferenceToken"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="StopTourRecording">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ProfileToken" type="tt:ReferenceToken"/>
+						<xs:element name="PresetTourToken" type="tt:ReferenceToken"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="StopTourRecordingResponse">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
 			<xs:element name="GetCompatibleConfigurations">
 				<xs:complexType>
 					<xs:sequence>
@@ -913,6 +942,18 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 	</wsdl:message>
 	<wsdl:message name="RemovePresetTourResponse">
 		<wsdl:part name="parameters" element="tptz:RemovePresetTourResponse"/>
+	</wsdl:message>
+	<wsdl:message name="StartTourRecordingRequest">
+		<wsdl:part name="parameters" element="tptz:StartTourRecording"/>
+	</wsdl:message>
+	<wsdl:message name="StartTourRecordingResponse">
+		<wsdl:part name="parameters" element="tptz:StartTourRecordingResponse"/>
+	</wsdl:message>
+	<wsdl:message name="StopTourRecordingRequest">
+		<wsdl:part name="parameters" element="tptz:StopTourRecording"/>
+	</wsdl:message>
+	<wsdl:message name="StopTourRecordingResponse">
+		<wsdl:part name="parameters" element="tptz:StopTourRecordingResponse"/>
 	</wsdl:message>
 	<wsdl:message name="GetCompatibleConfigurationsRequest">
 		<wsdl:part name="parameters" element="tptz:GetCompatibleConfigurations"/>
@@ -1160,6 +1201,16 @@ If no stop argument for pan, tilt or zoom is set, the device will stop all ongoi
 			<wsdl:documentation>Operation to delete a specific preset tour from the media profile.</wsdl:documentation>
 			<wsdl:input message="tptz:RemovePresetTourRequest"/>
 			<wsdl:output message="tptz:RemovePresetTourResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="StartTourRecording">
+			<wsdl:documentation>Operation to start recording PTZ movements into a new tour for the selected media profile.</wsdl:documentation>
+			<wsdl:input message="tptz:StartTourRecordingRequest"/>
+			<wsdl:output message="tptz:StartTourRecordingResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="StopTourRecording">
+			<wsdl:documentation>Operation to stop an active tour recording for the selected media profile.</wsdl:documentation>
+			<wsdl:input message="tptz:StopTourRecordingRequest"/>
+			<wsdl:output message="tptz:StopTourRecordingResponse"/>
 		</wsdl:operation>
 		<wsdl:operation name="GetCompatibleConfigurations">
 			<wsdl:documentation>Operation to get all available PTZConfigurations that can be added to the referenced media profile. <br/>
@@ -1419,6 +1470,24 @@ If no stop argument for pan, tilt or zoom is set, the device will stop all ongoi
 		</wsdl:operation>
 		<wsdl:operation name="RemovePresetTour">
 			<soap:operation soapAction="http://www.onvif.org/ver20/ptz/wsdl/RemovePresetTour"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="StartTourRecording">
+			<soap:operation soapAction="http://www.onvif.org/ver20/ptz/wsdl/StartTourRecording"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="StopTourRecording">
+			<soap:operation soapAction="http://www.onvif.org/ver20/ptz/wsdl/StopTourRecording"/>
 			<wsdl:input>
 				<soap:body use="literal"/>
 			</wsdl:input>

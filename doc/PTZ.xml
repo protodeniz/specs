@@ -1726,11 +1726,33 @@ Add GeoMove</revremark>
       </section>
     </section>
     <section>
-      <title>Preset Tour Operations</title>
-      <para>Preset tour is a feature for PTZ-capable devices, enabling the PTZ unit to move
-        sequentially on a set of presets or a recorded tour.</para>
-      <para>This section describes operations that manage the preset tours. These operations shall be implemented when a PTZ node in the PTZ service indicates support of preset tours with MaximumNumberOfPresetTours&gt;0 capability value, All operations require a profile token referencing a Media Profile including a PTZConfiguration. All operations for preset tours shall always be persistent.</para>
-      <para>PresetTours can have forward and backward directions, and in case direction is omitted, it is assumed to be forward. However, it is possible to specify random execution by setting the RandomPresetOrder attribute. In case RandomPresetOrder is set to true and Direction is also present, Direction will be ignored and presets of the Tour will be recalled randomly.</para>
+      <title>Tour Operations</title>
+      <para>Tours are a feature for PTZ-capable devices that automate PTZ movement. A device
+        can support two types of tours:</para>
+      <itemizedlist>
+        <listitem>
+          <para><emphasis role="bold">Preset Tour</emphasis> – The PTZ unit moves sequentially
+            through a configured set of preset positions. Preset tours can have forward and backward
+            directions, and in case direction is omitted, it is assumed to be forward. It is also
+            possible to specify random execution by setting the RandomPresetOrder attribute. In case
+            RandomPresetOrder is set to true and Direction is also present, Direction will be ignored
+            and presets of the tour will be recalled randomly.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">Recorded Tour</emphasis> – The PTZ unit replays previously
+            recorded PTZ movements. A recorded tour is created via the StartTourRecording
+            operation: the device captures all PTZ movements until StopTourRecording is issued.
+            The resulting tour is marked with isRecorded set to true and may have an empty list of
+            tour spots. Direction and RandomPresetOrder do not apply to recorded tours. Support
+            for recorded tours is signalled via the RecordedTourSupported attribute of
+            PTZPresetTourSupported.</para>
+        </listitem>
+      </itemizedlist>
+      <para>This section describes operations that manage tours. These operations shall be
+        implemented when a PTZ node in the PTZ service indicates support of preset tours with
+        MaximumNumberOfPresetTours&gt;0 capability value. All operations require a profile token
+        referencing a Media Profile including a PTZConfiguration. All tour configurations shall
+        always be persistent.</para>
       <section>
         <title>GetPresetTours</title>
         <para>A device supporting Preset Tour feature shall return all available preset tours through GetPresetTours.</para>
@@ -1844,8 +1866,7 @@ Add GeoMove</revremark>
       </section>
       <section>
         <title>CreatePresetTour</title>
-        <para>Create an empty preset tour to be either filled via ModifyPresetTour or learn via the
-          Record operation depending on the supported device capabilities.</para>
+        <para>A device supporting Preset Tour feature shall allow creating a new Preset Tour through the CreatePresetTour.</para>
         <variablelist role="op">
           <varlistentry>
             <term>request</term>
@@ -1938,9 +1959,6 @@ Add GeoMove</revremark>
           <listitem>
             <para>Pause: indicates pausing the preset tour.</para>
           </listitem>
-          <listitem>
-            <para>Record: start an new recording and override any existing recording.</para>
-          </listitem>
         </itemizedlist>
         <para>When receiving another OperatePresetTour command of Start operation for a preset tour which has already been started, the preset tour shall be restarted with the newly requested parameter.</para>
         <variablelist role="op">
@@ -2012,6 +2030,92 @@ Add GeoMove</revremark>
               <para role="text">The requested profile token does not reference a PTZ configuration.</para>
               <para role="param">env:Sender - ter:InvalidArgVal - ter:NoToken</para>
               <para role="text">The requested preset tour token does not exist.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>access class</term>
+            <listitem>
+              <para role="access">ACTUATE</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </section>
+      <section>
+        <title>StartTourRecording</title>
+        <para>A device supporting recorded tours shall allow a client to start recording PTZ
+          movements into a new tour through StartTourRecording. The device creates a new tour
+          and begins capturing all PTZ movements until a StopTourRecording command is issued.</para>
+        <para>Support for recorded tours is signalled via the RecordedTourSupported attribute of
+          PTZPresetTourSupported.</para>
+        <variablelist role="op">
+          <varlistentry>
+            <term>request</term>
+            <listitem>
+              <para role="param">ProfileToken [tt:ReferenceToken]</para>
+              <para role="text">Reference to an existing media profile.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>response</term>
+            <listitem>
+              <para role="param">PresetTourToken [tt:ReferenceToken]</para>
+              <para role="text">Token of the newly created tour being recorded.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>faults</term>
+            <listitem>
+              <para role="param">env:Sender - ter:InvalidArgVal - ter:NoProfile</para>
+              <para role="text">The requested profile token does not exist.</para>
+              <para role="param">env:Sender - ter:InvalidArgVal - ter:NoPTZProfile</para>
+              <para role="text">The requested profile token does not reference a PTZ configuration.</para>
+              <para role="param">env:Sender - ter:InvalidArgVal - ter:TooManyPresetTours</para>
+              <para role="text">There is not enough space in the device to create a new tour.</para>
+              <para role="param">env:Receiver - ter:ActionNotSupported - ter:RecordingNotSupported</para>
+              <para role="text">The device does not support recorded tours.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>access class</term>
+            <listitem>
+              <para role="access">ACTUATE</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </section>
+      <section>
+        <title>StopTourRecording</title>
+        <para>A device supporting recorded tours shall allow a client to stop an active tour
+          recording through StopTourRecording. Upon completion the tour is finalized and marked
+          as recorded (isRecorded attribute set to true). The recorded tour can then be played
+          back via the Start operation of OperatePresetTour.</para>
+        <variablelist role="op">
+          <varlistentry>
+            <term>request</term>
+            <listitem>
+              <para role="param">ProfileToken [tt:ReferenceToken]</para>
+              <para role="text">Reference to an existing media profile.</para>
+              <para role="param">PresetTourToken [tt:ReferenceToken]</para>
+              <para role="text">Reference to the tour being recorded.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>response</term>
+            <listitem>
+              <para role="text">This is an empty message.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>faults</term>
+            <listitem>
+              <para role="param">env:Sender - ter:InvalidArgVal - ter:NoProfile</para>
+              <para role="text">The requested profile token does not exist.</para>
+              <para role="param">env:Sender - ter:InvalidArgVal - ter:NoPTZProfile</para>
+              <para role="text">The requested profile token does not reference a PTZ configuration.</para>
+              <para role="param">env:Sender - ter:InvalidArgVal - ter:NoToken</para>
+              <para role="text">The requested preset tour token does not exist.</para>
+              <para role="param">env:Sender - ter:InvalidArgVal - ter:NotRecording</para>
+              <para role="text">The specified tour is not currently being recorded.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
