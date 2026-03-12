@@ -4162,6 +4162,13 @@ decoding .A decoder shall decode every data it receives (according to its capabi
 						</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
+				<xs:attribute name="MaxRecordedTours" type="xs:int">
+					<xs:annotation>
+						<xs:documentation>
+							Indicates the maximum number of different tours that can be recorded.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
 				<xs:anyAttribute processContents="lax"/>
 			</xs:extension>
 		</xs:complexContent>
@@ -4205,11 +4212,6 @@ decoding .A decoder shall decode every data it receives (according to its capabi
 		<xs:attribute name="PresetTourOperations" type="tt:StringList">
 			<xs:annotation>
 				<xs:documentation>List of supported preset tour operations as defined in ExtendedPTZTourOperation.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="RecordedTourSupported" type="xs:boolean">
-			<xs:annotation>
-				<xs:documentation>Indicates whether the device supports recorded tours via StartTourRecording and StopTourRecording.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:anyAttribute processContents="lax"/>

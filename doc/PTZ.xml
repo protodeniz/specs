@@ -413,7 +413,7 @@ Add GeoMove</revremark>
             <para>MaximumNumberOfPresetTours – Indicates number of preset tours that can be created. Required preset tour operations shall be available for this PTZ node if one or more preset tours are supported.</para>
           </listitem>
           <listitem>
-            <para>MaximumNumberOfRecordedTours – Indicates number of recorded tours that can be created. Required recorded tour operations shall be available for this PTZ node if one or more recorded tours are supported.</para>
+            <para>MaxRecordedTours – Indicates number of recorded tours that can be created. Required recorded tour operations shall be available for this PTZ node if one or more recorded tours are supported.</para>
           </listitem>
         </itemizedlist>
       </section>
