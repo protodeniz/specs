@@ -240,7 +240,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 					<xs:sequence>
 						<xs:element name="Profiles" type="tt:Profile" minOccurs="0" maxOccurs="unbounded">
 							<xs:annotation>
-								<xs:documentation>lists all profiles that exist in the media service </xs:documentation>
+								<xs:documentation>Lists all profiles that exist in the media service.</xs:documentation>
 							</xs:annotation>
 						</xs:element>
 					</xs:sequence>
